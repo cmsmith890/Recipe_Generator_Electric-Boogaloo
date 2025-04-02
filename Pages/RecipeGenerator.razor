@@ -1,0 +1,80 @@
+﻿@page "/recipe-generator"
+@using System.Collections.Generic
+@using System.Linq
+@using System.Threading.Tasks
+@using Microsoft.AspNetCore.Components
+
+@inject RecipeService RecipeService
+
+<PageTitle>Recipe Generator</PageTitle>
+
+<h1>Recipe Generator</h1>
+
+<p>Enter the ingredients you have:</p>
+
+<div class="form-group">
+    <input type="text" class="form-control" @bind="newIngredient" placeholder="Enter ingredient" />
+    <button class="btn btn-primary mt-2" @onclick="AddIngredient">Add Ingredient</button>
+</div>
+
+@if (ingredients.Any())
+{
+    <h3>Your Ingredients:</h3>
+    <div class="ingredient-list">
+        @foreach (var ingredient in ingredients)
+        {
+            <div class="ingredient-item">
+                <span>@ingredient</span>
+                <button class="btn btn-danger btn-sm" @onclick="() => RemoveIngredient(ingredient)">Remove</button>
+            </div>
+        }
+    </div>
+    <button class="btn btn-success" @onclick="Generate">Generate Recipe</button>
+}
+
+@if (generatedRecipe != null)
+{
+    <div class="mt-4 recipe-card">
+        <h2>Generated Recipe: @generatedRecipe.Name</h2>
+        <h3>Ingredients:</h3>
+        <ul class="recipe-ingredients">
+            @foreach (var ingredient in generatedRecipe.Ingredients)
+            {
+                <li>@ingredient</li>
+            }
+        </ul>
+        <h3>Instructions:</h3>
+        <p class="recipe-instructions">@generatedRecipe.Instructions</p>
+    </div>
+}
+else if (ingredients.Any() && generated)
+{
+    <p class="text-warning mt-2">No recipe found with the given ingredients.</p>
+}
+
+@code {
+    private string newIngredient = string.Empty;
+    private List<string> ingredients = new List<string>();
+    private Recipe? generatedRecipe = null;
+    private bool generated = false;
+
+    private void AddIngredient()
+    {
+        if (!string.IsNullOrWhiteSpace(newIngredient) && !ingredients.Contains(newIngredient, StringComparer.OrdinalIgnoreCase))
+        {
+            ingredients.Add(newIngredient.Trim());
+        }
+        newIngredient = string.Empty;
+    }
+
+    private void RemoveIngredient(string ingredientToRemove)
+    {
+        ingredients.Remove(ingredientToRemove);
+    }
+
+    private async Task Generate()
+    {
+        generatedRecipe = await RecipeService.GenerateRecipeAsync(ingredients); // Await the async call
+        generated = true;
+    }
+}

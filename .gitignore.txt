@@ -1,0 +1,45 @@
+# .NET files
+*.csproj.user
+*.sln.docstates
+*.suo
+*.user
+*.ide
+*.swp
+*.swo
+
+# Build results
+/bin/*
+/obj/*
+/publish/*
+/out/*
+
+# NuGet
+/packages/*
+/artifacts/*
+!/packages/repositories.config
+/local
+/Temp
+/ToolResults
+/log
+
+# Visual Studio
+.vs/
+*.rsuser
+*.shfbproj
+/Common/
+/Mobile/
+
+# Deployment
+/App_Data/
+/App_Config/
+/config/
+
+#Temporary files
+*~/
+*~
+.DS_Store
+
+# Other
+/node_modules/
+/wwwroot/_content/* # Ignore everything in _content, but not the folder itself
+!/wwwroot/_content/ # Don't ignore the _content folder. Important for Blazor libraries.
